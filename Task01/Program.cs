@@ -12,7 +12,7 @@ namespace Weapon
             if(_bulletCount > 0)
             {
                 player.TakeDamage(_damage);
-                _bulletCount -= 1;
+                _bulletCount--;
             }
         }
     }
@@ -26,7 +26,17 @@ namespace Weapon
             if(damage > 0)
             {
                 _health -= damage;
+
+                if(_health <= 0)
+                {
+                    Dead();
+                }
             }
+        }
+
+        private void Dead()
+        {
+            //логика смерти игрока
         }
     }
 
