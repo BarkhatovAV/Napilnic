@@ -5,14 +5,14 @@ namespace NapilnicTask01
     class Weapon
     {
         private int _damage;
-        private int _bulletCount;
+        private int _bullets;
 
-        public Weapon(int damage, int bulletCount)
+        public Weapon(int damage, int bullets)
         {
-            if(damage > 0 && bulletCount > 0)
+            if(damage > 0 && bullets > 0)
             {
                 _damage = damage;
-                _bulletCount = bulletCount;
+                _bullets = bullets;
             }
             else
             {
@@ -22,10 +22,14 @@ namespace NapilnicTask01
 
         public void Fire(Player player)
         {
-            if (_bulletCount > 0)
+            if (_bullets > 0)
             {
                 player.TakeDamage(_damage);
-                _bulletCount--;
+                _bullets--;
+            }
+            else
+            {
+                Console.WriteLine("Закончились патроны");
             }
         }
     }
