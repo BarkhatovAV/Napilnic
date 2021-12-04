@@ -1,42 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Task02
 {
-    class Cart
+    class Cart : Warehouse
     {
         private Warehouse _warehouse;
-        private List<CartItem> _itemsToBuy = new List<CartItem>();
+        private Dictionary<Item, int> _items = new Dictionary<Item, int>();
 
-        public Cart(Warehouse warehouse)
+        public Cart(Warehouse warehous)
         {
-            _warehouse = warehouse;
+            _warehouse = warehous;
         }
 
         public void Add(Item item, int count)
         {
-            if ((count <= 0)&&(item == null))
+            if (item == null)
                 throw new InvalidOperationException();
 
-            foreach (var warehouseItem in _warehouse.Items)
-            {
-                if(warehouseItem.Item.Name == item.Name)
-                {
-                    if(warehouseItem.Count >= count)
-                    {
-                        _itemsToBuy.Add(new CartItem(item, count));
-                        _warehouse.Ship(item, count);
-                        Console.WriteLine($"В корзину добавлен {item.Name} в количестве {count}");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Товара на складе не достаточно");
-                    }
-                }
-            }
+            if (count <= 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            if (!Items.ContainsKey(item))
+                throw new ArgumentOutOfRangeException(nameof(item));
+            
+            if (Items[item] < count)
+                throw new ArgumentOutOfRangeException(nameof(count));
+             
+            AddItem(_items, item, count);
+            _warehouse.Ship(item, count);        
         }
 
+
+        public void ShowCartItems()
+        {
+            ShowItems(_items);
+        }
         public Order Order()
         {
             return new Order();

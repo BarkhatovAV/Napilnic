@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Task02
+﻿namespace Task02
 {
     class Shop
     {
-        public Warehouse _warehous { get; private set; }
+        public Warehouse _warehouse { get; private set; }
 
         public Shop(Warehouse warehouse)
         {
-            _warehous = warehouse;
+            _warehouse = warehouse;
         }
 
         public Cart Cart()
         {
-            return new Cart(_warehous);
+            return new Cart(_warehouse);
         }
     }
 }
