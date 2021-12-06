@@ -9,19 +9,22 @@ namespace NapilnicTask01
 
         public Weapon(int damage, int bullets)
         {
-            if(damage > 0 && bullets > 0)
-            {
-                _damage = damage;
-                _bullets = bullets;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException();
-            }
+            if (damage < 0)
+                throw new ArgumentOutOfRangeException(nameof(damage));
+
+            if (bullets < 0)
+                throw new ArgumentOutOfRangeException(nameof(bullets));
+
+            _damage = damage;
+            _bullets = bullets;
+
         }
 
         public void Fire(Player player)
         {
+            if (player == null)
+                throw new ArgumentNullException(nameof(player));
+
             if (_bullets > 0)
             {
                 player.TakeDamage(_damage);
@@ -29,7 +32,7 @@ namespace NapilnicTask01
             }
             else
             {
-                Console.WriteLine("Закончились патроны");
+                throw new Exception("кончились патроны");
             }
         }
     }
@@ -38,31 +41,27 @@ namespace NapilnicTask01
     {
         private int _health;
 
+        public event Action Died;
+
         public Player(int health)
         {
-            if(health > 0)
-                _health = health;
-            else
-                throw new ArgumentOutOfRangeException();
+            if (health <= 0)
+                throw new ArgumentOutOfRangeException(nameof(health));
 
+            _health = health;
         }
 
         public void TakeDamage(int damage)
         {
-            if (damage > 0)
+            if (damage <= 0)
+                throw new ArgumentOutOfRangeException(nameof(damage));
+
+            _health -= damage;
+
+            if (_health <= 0)
             {
-                _health -= damage;
-
-                if (_health <= 0)
-                {
-                    Dead();
-                }
+                Died?.Invoke();
             }
-        }
-
-        private void Dead()
-        {
-            //логика смерти игрока
         }
     }
 
@@ -72,11 +71,17 @@ namespace NapilnicTask01
 
         public Bot(Weapon weapon)
         {
+            if (weapon == null)
+                throw new ArgumentNullException(nameof(weapon));
+
             _weapon = weapon;
         }
 
         public void OnSeePlayer(Player player)
         {
+            if (player == null)
+                throw new ArgumentNullException(nameof(player));
+
             _weapon.Fire(player);
         }
     }
